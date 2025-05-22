@@ -2,11 +2,11 @@ Mackay
 ==============
 
 This is a python implementation of the metropolis demo David Mackay gives in the first part of [1].
-References.
 
+References
 ----------
 
-[1] [Video 12 from David MacKay's Information Theory course](https://videolectures.net/videos/mackay_course_12)
+[1] [Lecture 12 from David MacKay's Information Theory course](https://videolectures.net/videos/mackay_course_12)
 
 [2] Chapter 29, [Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
 

@@ -21,7 +21,6 @@ Random walk in a corridor of width 20 - draw histogram of positions visited.
 % uv run metropolis_demo.py
 % uv pip install matplotlib numpy
 % uv run metropolis_demo.py
-% uv run metropolis_demo.py
 Pausing every 20 iterations - press enter to continue
 |           *         |
 |            *        |

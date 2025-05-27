@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import cm
+#from matplotlib.ticker import LinearLocator
 
 ########################################################
 #  Inferring a Gaussian
@@ -22,6 +24,16 @@ DATA = [0.63, 1.0, 0.4, 1.37, 1.6]
 def P(x, m, s):
     return np.exp(-(x - m)**2 / (2 * s**2)) / (s * np.sqrt(2 * np.pi))
 
+def L(n,m,s):
+    return P(DATA[n],m,s)
+
+# Whole data likelihood
+def WL(m,s):
+    p=1.0
+    for x in DATA:
+        p*=P(x,m,s)    
+    return p
+    
 def plot_gaussians_varying_mu(x, s, mus):
     plt.figure()
     for m in mus:
@@ -88,7 +100,7 @@ def plot_data_and_gaussians_vlines_like(x, models, data_y):
     x_vals = np.array(DATA)
     plt.plot(x_vals, [data_y] * len(DATA), 'o', color='purple')
 
-   # Draw 5 vertical lines 
+    # Draw 5 vertical lines 
     plt.vlines(DATA, ymin=0, ymax=0.8, colors='red', linestyles='dashed', linewidth=2)
 
     for m,s in models:
@@ -101,6 +113,56 @@ def plot_data_and_gaussians_vlines_like(x, models, data_y):
     plt.grid(True)
     plt.legend()
     plt.show()
+
+def plot_likelihood_surface():
+    mus = np.linspace(-1, 6, 100)
+    sigmas = np.linspace(0.05, 1.0, 100)  # Avoid 0 to prevent divide-by-zero
+    M, S = np.meshgrid(mus, sigmas)
+
+    # Compute likelihood over the grid
+    Z = np.zeros_like(M)
+    for i in range(M.shape[0]):
+        for j in range(M.shape[1]):
+            Z[i, j] = WL(M[i, j], S[i, j])
+
+    # Optional: Normalize or log-transform for better visualization
+    Z_log = np.log(Z + 1e-300)  # Prevent log(0)
+
+    # Plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    surf = ax.plot_surface(M, S, Z_log, cmap=cm.viridis, linewidth=0, antialiased=True)
+
+    ax.set_xlabel('Mean (μ)')
+    ax.set_ylabel('Std Dev (σ)')
+    ax.set_zlabel('log Likelihood')
+    ax.set_title('Log Likelihood Surface')
+    fig.colorbar(surf, shrink=0.5, aspect=10)
+    plt.show()
+
+def plot_likelihood_contour():
+    mus = np.linspace(-1, 3, 200)
+    sigmas = np.linspace(0.05, 1.0, 200)  # Avoid zero
+
+    M, S = np.meshgrid(mus, sigmas)
+    Z = np.zeros_like(M)
+
+    for i in range(M.shape[0]):
+        for j in range(M.shape[1]):
+            Z[i, j] = WL(M[i, j], S[i, j])
+
+    Z_log = np.log(Z + 1e-300)  # prevent log(0)
+
+    plt.figure(figsize=(8, 6))
+    cp = plt.contourf(M, S, Z_log, levels=40, cmap='viridis')
+    plt.colorbar(cp, label='log Likelihood')
+    plt.xlabel('Mean (μ)')
+    plt.ylabel('Std Dev (σ)')
+    plt.title('Log Likelihood Contour')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
 
 def main():
     x = np.linspace(-3 - 4, 3 + 4, 500)  # fixed s = 1
@@ -118,7 +180,9 @@ def main():
     plot_data_and_gaussians_vlines_like(x, models=models, data_y=0.7245)
 
 if __name__ == "__main__":
-    main()
+    #plot_likelihood_contour()
+    plot_likelihood_surface()
+    #main()
 
 
 

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # 
 #   * Chapter 29 in "Information Theory, Inference, and Learning Algorithms", David MacKay
 #     https://www.inference.org.uk/itprnn/book.html
-#   * Lecture Video 12 @ 53:50
+#   * Lecture Video 12 @ 53:50 (Metropolis)
 #     https://www.inference.org.uk/itprnn_lectures/09_mackay.mp4
 #   * Old octave demo:
 #     https://www.inference.org.uk/mackay/itprnn/code/mcmc/

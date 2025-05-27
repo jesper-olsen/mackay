@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-#from matplotlib.ticker import LinearLocator
 
 ########################################################
 #  Inferring a Gaussian
@@ -178,11 +177,11 @@ def main():
     )
     plot_data_and_gaussians_vlines(x, models=models, data_y=0.7245)
     plot_data_and_gaussians_vlines_like(x, models=models, data_y=0.7245)
+    #plot_likelihood_contour()
+    #plot_likelihood_surface()
 
 if __name__ == "__main__":
-    #plot_likelihood_contour()
-    plot_likelihood_surface()
-    #main()
+    main()
 
 
 

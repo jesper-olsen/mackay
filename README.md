@@ -1,7 +1,8 @@
 Mackay
 ==============
 
-This is a python implementation of the metropolis demo David Mackay gives in the first part of [1].
+Python implementation of some of the Markov Chain Monte Carlo demos David Mackay gives in his Information Theory course [1][2].
+The original demos can be seen in the lecture videos and sofware (octave/gnuplot/perl) for some of them survives on his website, but are hard to run with modern versions of those tools.
 
 References
 ----------

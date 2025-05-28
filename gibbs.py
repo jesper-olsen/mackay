@@ -1,3 +1,19 @@
+########################################################
+#  Markov Chain Monte Carlo - Metropolis Method 
+# 
+#  References
+# 
+#   * Chapter 29 in "Information Theory, Inference, and Learning Algorithms", David MacKay
+#     https://www.inference.org.uk/itprnn/book.html
+#   * Lecture Video 12 
+#     https://www.inference.org.uk/itprnn_lectures/12_mackay.mp4
+#   * Old octave demo (DEMOskye):
+#     https://www.inference.org.uk/mackay/itprnn/code/gibbsdemo/
+# 
+########################################################
+
+
+
 import numpy as np
 from scipy.stats import gamma
 import matplotlib.pyplot as plt
@@ -99,152 +115,153 @@ def gibbs(mu, sigma, L, xbar, v, N,
 
     return mu, sigma, logtime, ltt
 
-# --- "Global" loggers and settings ---
-dT = 1
-T = 0
-dT0 = 1
-T0 = 0
-logtime = 0   # Python, zero-based
-wl = []   # weight vector log
-wlt = []  # trajectory log
-wltlog = True  # enable trajectory logging
-ltt = 0
 
-autos = False
-verbose = False
-logsy = True   # log y-axis for sigma
-arrows = False
+def demo_skye():
+    # --- "Global" loggers and settings ---
+    dT = 1
+    T = 0
+    dT0 = 1
+    T0 = 0
+    logtime = 0   # Python, zero-based
+    wl = []   # weight vector log
+    wlt = []  # trajectory log
+    wltlog = True  # enable trajectory logging
+    ltt = 0
 
-doplot = True
+    autos = False
+    verbose = False
+    logsy = True   # log y-axis for sigma
+    arrows = False
 
-# --- Initial conditions and data ---
-mu = 0.1
-sigma = 1.0
-xbar = 1.0
-v = 0.2
-N = 5
-L = 30
+    doplot = True
 
-# --- Define plotting range ---
-xmin, xmax, dx = 0, 2.0, 0.05
-smin, smax, dls = 0.18, 1.8, 0.1
+    # --- Initial conditions and data ---
+    mu = 0.1
+    sigma = 1.0
+    xbar = 1.0
+    v = 0.2
+    N = 5
+    L = 30
 
-x = np.arange(xmin, xmax + dx, dx)
-ls = np.arange(np.log(smin), np.log(smax) + dls, dls)
-s = np.exp(ls)
+    # --- Define plotting range ---
+    xmin, xmax, dx = 0, 2.0, 0.05
+    smin, smax, dls = 0.18, 1.8, 0.1
 
-X, S = np.meshgrid(x, s)
+    x = np.arange(xmin, xmax + dx, dx)
+    ls = np.arange(np.log(smin), np.log(smax) + dls, dls)
+    s = np.exp(ls)
 
-D = np.outer(np.ones(len(s)), N * ((x - xbar) ** 2 + v)) / (2 * np.outer(s ** 2, np.ones(len(x))))
+    X, S = np.meshgrid(x, s)
 
-if logsy:
-    exponent = N
-else:
-    exponent = N + 1
+    D = np.outer(np.ones(len(s)), N * ((x - xbar) ** 2 + v)) / (2 * np.outer(s ** 2, np.ones(len(x))))
 
-SO = np.outer(s ** exponent, np.ones(len(x)))
-Z = np.exp(-D) / SO
+    if logsy:
+        exponent = N
+    else:
+        exponent = N + 1
 
-# --- Plotting surface ---
-fig = plt.figure(1)
-plt.clf()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(X, S, Z, cmap='viridis', edgecolor='none', shade=True)
-ax.set_xlabel(r'$\mu$')
-ax.set_ylabel(r'$\sigma$')
-ax.set_zlabel(r'$P(\mu, \sigma)$')
-ax.set_title('Joint Posterior Density')
-ax.view_init(30, 60)
-plt.grid(True)
-plt.show(block=False)
+    SO = np.outer(s ** exponent, np.ones(len(x)))
+    Z = np.exp(-D) / SO
 
-# Save meshgrid for plotting trajectories later
-zz = (X, S, Z)
-
-input("Ready for contour plot? ")
-
-# --- Plotting contour ---
-plt.figure(2)
-plt.clf()
-plt.contour(X, S, Z, 10)
-plt.xlabel(r'$\mu$')
-plt.ylabel(r'$\sigma$')
-plt.title('Posterior Contours')
-plt.tight_layout()
-plt.show(block=False)
-
-# --- Set random seed ---
-see = 0.1123456
-np.random.seed(int(see * 10**7))  # best effort, as Octave's "rand('seed', x)" isn't directly compatible
-
-# --- Optional: arrows to indicate sigma_N and sigma_{N-1} ---
-if arrows:
-    h1 = np.sqrt(v)
-    h2 = np.sqrt(v * N / (N - 1))
-    plt.plot([1, 2], [h1, h1], 'r--', label=r'$\sigma_N$')
-    plt.plot([1, 2], [h2, h2], 'g--', label=r'$\sigma_{N-1}$')
-    plt.legend()
+    # --- Plotting surface ---
+    fig = plt.figure(1)
+    plt.clf()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(X, S, Z, cmap='viridis', edgecolor='none', shade=True)
+    ax.set_xlabel(r'$\mu$')
+    ax.set_ylabel(r'$\sigma$')
+    ax.set_zlabel(r'$P(\mu, \sigma)$')
+    ax.set_title('Joint Posterior Density')
+    ax.view_init(30, 60)
+    plt.grid(True)
     plt.show(block=False)
 
-# --- Initialize sample logging arrays ---
-# wl = np.zeros((L * 2 + 10, 4))
-# wlt = np.zeros((L * 3 + 10, 4))
-wl = np.full((L * 2 + 10, 4), np.nan)
-wlt = np.full((L * 3 + 10, 4), np.nan)
+    # Save meshgrid for plotting trajectories later
+    zz = (X, S, Z)
+
+    input("Ready for contour plot? ")
+
+    # --- Plotting contour ---
+    plt.figure(2)
+    plt.clf()
+    plt.contour(X, S, Z, 10)
+    plt.xlabel(r'$\mu$')
+    plt.ylabel(r'$\sigma$')
+    plt.title('Posterior Contours')
+    plt.tight_layout()
+    plt.show(block=False)
+
+    # --- Set random seed ---
+    see = 0.1123456
+    np.random.seed(int(see * 10**7))  # best effort, as Octave's "rand('seed', x)" isn't directly compatible
+
+    # --- Optional: arrows to indicate sigma_N and sigma_{N-1} ---
+    if arrows:
+        h1 = np.sqrt(v)
+        h2 = np.sqrt(v * N / (N - 1))
+        plt.plot([1, 2], [h1, h1], 'r--', label=r'$\sigma_N$')
+        plt.plot([1, 2], [h2, h2], 'g--', label=r'$\sigma_{N-1}$')
+        plt.legend()
+        plt.show(block=False)
+
+    # --- Initialize sample logging arrays ---
+    # wl = np.zeros((L * 2 + 10, 4))
+    # wlt = np.zeros((L * 3 + 10, 4))
+    wl = np.full((L * 2 + 10, 4), np.nan)
+    wlt = np.full((L * 3 + 10, 4), np.nan)
 
 
-# --- Call Gibbs sampler ---
-# The gibbs function should be updated to not return mu,sigma but to update wl, wlt and globals by reference (or could return them)
-mu, sigma, logtime, ltt  = gibbs(mu, sigma, L, xbar, v, N, 
-                  wl, wlt, wltlog, ltt, verbose, T, logtime, zz, doplot)
+    # --- Call Gibbs sampler ---
+    # The gibbs function should be updated to not return mu,sigma but to update wl, wlt and globals by reference (or could return them)
+    mu, sigma, logtime, ltt  = gibbs(mu, sigma, L, xbar, v, N, 
+                      wl, wlt, wltlog, ltt, verbose, T, logtime, zz, doplot)
 
-# --- Final plot of trajectory and samples ---
-fig = plt.figure(3)
-plt.clf()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(X, S, Z, cmap='viridis', edgecolor='none', alpha=0.6)
-ax.set_xlabel(r'$\mu$')
-ax.set_ylabel(r'$\sigma$')
-ax.set_zlabel(r'$P(\mu, \sigma)$')
-ax.set_title('Gibbs Samples on Posterior')
-ax.view_init(30, 60)
+    # --- Final plot of trajectory and samples ---
+    fig = plt.figure(3)
+    plt.clf()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(X, S, Z, cmap='viridis', edgecolor='none', alpha=0.6)
+    ax.set_xlabel(r'$\mu$')
+    ax.set_ylabel(r'$\sigma$')
+    ax.set_zlabel(r'$P(\mu, \sigma)$')
+    ax.set_title('Gibbs Samples on Posterior')
+    ax.view_init(30, 60)
 
-wl = wl[~np.isnan(wl[:, 0])]
-wlt = wlt[~np.isnan(wlt[:, 0])]
+    wl = wl[~np.isnan(wl[:, 0])]
+    wlt = wlt[~np.isnan(wlt[:, 0])]
 
-print("wlt shape", wlt.shape)
-print("wl shape", wl.shape)
-print("wl",wl)
-if wlt.shape[0] > 0 and np.any(wlt):
-    ax.plot3D(wlt[:ltt, 0], wlt[:ltt, 1], wlt[:ltt, 2], 'ro', label="Trajectory")
+    print("wlt shape", wlt.shape)
+    print("wl shape", wl.shape)
+    print("wl",wl)
+    if wlt.shape[0] > 0 and np.any(wlt):
+        ax.plot3D(wlt[:ltt, 0], wlt[:ltt, 1], wlt[:ltt, 2], 'ro', label="Trajectory")
 
-# if wl.shape[0] > 0 and np.any(wl):
-#     ax.plot3D(wl[:logtime, 0], wl[:logtime, 1], wl[:logtime, 2], 'gx', label="Samples")
-# Project wl samples onto Z surface
-mu_samples = wl[:logtime, 0]
-sigma_samples = wl[:logtime, 1]
+    # if wl.shape[0] > 0 and np.any(wl):
+    #     ax.plot3D(wl[:logtime, 0], wl[:logtime, 1], wl[:logtime, 2], 'gx', label="Samples")
+    # Project wl samples onto Z surface
+    mu_samples = wl[:logtime, 0]
+    sigma_samples = wl[:logtime, 1]
 
-print("mu_samples:", mu_samples)
-print("sigma_samples:", sigma_samples)
+    print("mu_samples:", mu_samples)
+    print("sigma_samples:", sigma_samples)
 
-# Evaluate posterior (Z) at the sample points
-def posterior(mu, sigma):
-    D = N * ((mu - xbar)**2 + v) / (2 * sigma**2)
-    S = sigma ** exponent
-    return np.exp(-D) / S
+    # Evaluate posterior (Z) at the sample points
+    def posterior(mu, sigma):
+        D = N * ((mu - xbar)**2 + v) / (2 * sigma**2)
+        S = sigma ** exponent
+        return np.exp(-D) / S
 
-z_samples = posterior(mu_samples, sigma_samples)
-print("z_samples", z_samples[:10])
-
-
-# Plot the samples at their actual posterior value
-ax.plot3D(mu_samples, sigma_samples, z_samples, 'gx', label="Samples")  # accepted samples
-#ax.plot3D(mu_samples, sigma_samples, z_samples,  'gx', label="Samples", markersize=6, zorder=10)
+    z_samples = posterior(mu_samples, sigma_samples)
+    print("z_samples", z_samples[:10])
 
 
+    # Plot the samples at their actual posterior value
+    ax.plot3D(mu_samples, sigma_samples, z_samples, 'gx', label="Samples")  # accepted samples
+    #ax.plot3D(mu_samples, sigma_samples, z_samples,  'gx', label="Samples", markersize=6, zorder=10)
 
-ax.legend()
-plt.grid(True)
-plt.show()
+    ax.legend()
+    plt.grid(True)
+    plt.show()
 
-
+if __name__ == "__main__":
+    demo_skye()

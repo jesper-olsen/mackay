@@ -1,6 +1,4 @@
-import numpy as np
-import matplotlib.pyplot as plt
-########################################################
+############################################################################################
 #  Markov Chain Monte Carlo - Metropolis Method 
 # 
 #  References
@@ -12,9 +10,11 @@ import matplotlib.pyplot as plt
 #   * Old octave demo:
 #     https://www.inference.org.uk/mackay/itprnn/code/mcmc/
 # 
-########################################################
+############################################################################################
 
-spacing = 0.1
+import numpy as np
+import matplotlib.pyplot as plt
+import argparse
 
 def phi(x):
     # phi is a function whose mean we want
@@ -23,10 +23,10 @@ def phi(x):
 
 def density(pstar):
     # Generate data
+    spacing = 0.1
     x = np.arange(-5, 5 + spacing, spacing)
     y = np.column_stack((x, pstar(x)))
     xphi = np.column_stack((x, phi(x)))
-
 
     # Figure 1: P*(x) and φ(x)
     plt.figure()
@@ -100,19 +100,9 @@ def metplota(r, xt, pt, xprop, pprop, xQ, y, xQs, pausing):
         input("Press Enter to continue...")
 
 
-# def metplot(xQs):
-#     xs = xQs[:, 0]
-#     ys = xQs[:, 1]
-#     plt.figure()
-#     plt.plot(xs, ys, 'o-', label='Sampled φ(x)')
-#     plt.xlabel('x')
-#     plt.ylabel('φ(x)')
-#     plt.title('Metropolis Samples')
-#     plt.grid(True)
-#     plt.legend()
-#     plt.show()
+def metropolis(pausing, xmin, xmax, mu, sigma, R, pstar):
+    np.random.seed(42)
 
-def metropolis(pausing, xmin, xmax, mu, sigma, R, plotting, pstar):
     defheight = -0.25
     inc = 0.05
     high = 2.0
@@ -147,7 +137,7 @@ def metropolis(pausing, xmin, xmax, mu, sigma, R, plotting, pstar):
         xprop = np.random.randn() * sigma + xt
         pprop = pstar(xprop)
 
-        if plotting > 1 and (r < 50 or (r < 60 and r % 10 == 0) or r % 20 == 0):
+        if pausing and (r < 50 or (r < 60 and r % 10 == 0) or r % 20 == 0):
             metplota(r, xt, pt, xprop, pprop, xQ, y, xQs, pausing)
 
         # Metropolis acceptance
@@ -164,13 +154,12 @@ def metropolis(pausing, xmin, xmax, mu, sigma, R, plotting, pstar):
         sumphi += ph
         xQs.append([xt, ph, r, a, height, sumphi / r])
 
-
-        if plotting > 1 and r < 50:
+        if pausing and r < 50:
             metplota(r, xt, pt, xprop, pprop, xQ, y, xQs, pausing)
 
     xQs = np.array(xQs)
 
-    if plotting == 1:
+    if not pausing:
         metplota(R, xt, pt, xprop, pprop, xQ, y, xQs, False)
 
     print("Done")
@@ -179,22 +168,22 @@ def metropolis(pausing, xmin, xmax, mu, sigma, R, plotting, pstar):
 
 
 if __name__=="__main__":
-    def pstar(x):
+    def pstar1(x):
         return np.exp(0.4 * ((x - 0.4)**2) - 0.08 * (x**4))
-        #return np.exp(1.15 * np.sin(6.0 * x) - 0.3 * ((x - 0.65)**2) - 0.01 * (x**4))
+    def pstar2(x):
+        return np.exp(1.15 * np.sin(6.0 * x) - 0.3 * ((x - 0.65)**2) - 0.01 * (x**4))
 
+    parser = argparse.ArgumentParser(description="Metropolis MCMC demo")
+    parser.add_argument("--steps", type=int, default=100, help="Number of sampling steps")
+    parser.add_argument("--sigma", type=float, default=1.5, help="Proposal distribution stddev")
+    parser.add_argument("--fast", action="store_true", help="No pause between steps")
+    parser.add_argument("--pstar2", action="store_true", help="density pstar2")
+    args = parser.parse_args()
+    pstar = pstar2 if args.pstar2 else pstar1
     #density(pstar)
     #distribution(pstar)
 
-    pausing = False
-    pausing = True
-    xmin,xmax = -15,15
-    mu = 0
-    sigma = 1.5
-    R=100        # number of samples
-    plotting = 1 # everything at once
-    plotting = 2 # incremental updates
-    metropolis(pausing, xmin, xmax, mu, sigma, R, plotting, pstar)
+    metropolis(pausing=not args.fast, xmin=-15, xmax=15, mu=0.0, sigma=args.sigma, R=args.steps, pstar=pstar)
 
 
 

@@ -1,5 +1,5 @@
 ########################################################
-#  Markov Chain Monte Carlo - Metropolis Method 
+#  Markov Chain Monte Carlo - Gibbs Sampling
 # 
 #  References
 # 

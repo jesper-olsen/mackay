@@ -2,7 +2,6 @@ import numpy as np
 from scipy.stats import gamma
 import matplotlib.pyplot as plt
 
-
 def inversegamma(N, a):
     """
     inversegamma(N, a)
@@ -98,7 +97,7 @@ def gibbs(mu, sigma, L, xbar, v, N,
         if verbose:
             print(f"[mu, sigma] = [{mu}, {sigma}]")
 
-    return mu, sigma
+    return mu, sigma, logtime, ltt
 
 # --- "Global" loggers and settings ---
 dT = 1
@@ -196,7 +195,7 @@ wlt = np.full((L * 3 + 10, 4), np.nan)
 
 # --- Call Gibbs sampler ---
 # The gibbs function should be updated to not return mu,sigma but to update wl, wlt and globals by reference (or could return them)
-mu, sigma = gibbs(mu, sigma, L, xbar, v, N, 
+mu, sigma, logtime, ltt  = gibbs(mu, sigma, L, xbar, v, N, 
                   wl, wlt, wltlog, ltt, verbose, T, logtime, zz, doplot)
 
 # --- Final plot of trajectory and samples ---
@@ -213,14 +212,36 @@ ax.view_init(30, 60)
 wl = wl[~np.isnan(wl[:, 0])]
 wlt = wlt[~np.isnan(wlt[:, 0])]
 
-print("wlt shape", wlt.shape, wlt.shape[0])
-print("wl shape", wl.shape, wl.shape[0])
+print("wlt shape", wlt.shape)
+print("wl shape", wl.shape)
 print("wl",wl)
 if wlt.shape[0] > 0 and np.any(wlt):
     ax.plot3D(wlt[:ltt, 0], wlt[:ltt, 1], wlt[:ltt, 2], 'ro', label="Trajectory")
 
-if wl.shape[0] > 0 and np.any(wl):
-    ax.plot3D(wl[:logtime, 0], wl[:logtime, 1], wl[:logtime, 2], 'gx', label="Samples")
+# if wl.shape[0] > 0 and np.any(wl):
+#     ax.plot3D(wl[:logtime, 0], wl[:logtime, 1], wl[:logtime, 2], 'gx', label="Samples")
+# Project wl samples onto Z surface
+mu_samples = wl[:logtime, 0]
+sigma_samples = wl[:logtime, 1]
+
+print("mu_samples:", mu_samples)
+print("sigma_samples:", sigma_samples)
+
+# Evaluate posterior (Z) at the sample points
+def posterior(mu, sigma):
+    D = N * ((mu - xbar)**2 + v) / (2 * sigma**2)
+    S = sigma ** exponent
+    return np.exp(-D) / S
+
+z_samples = posterior(mu_samples, sigma_samples)
+print("z_samples", z_samples[:10])
+
+
+# Plot the samples at their actual posterior value
+ax.plot3D(mu_samples, sigma_samples, z_samples, 'gx', label="Samples")  # accepted samples
+#ax.plot3D(mu_samples, sigma_samples, z_samples,  'gx', label="Samples", markersize=6, zorder=10)
+
+
 
 ax.legend()
 plt.grid(True)

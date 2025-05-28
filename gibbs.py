@@ -1,4 +1,4 @@
-########################################################
+###########################################################################################
 #  Markov Chain Monte Carlo - Gibbs Sampling
 # 
 #  References
@@ -10,160 +10,117 @@
 #   * Old octave demo (DEMOskye):
 #     https://www.inference.org.uk/mackay/itprnn/code/gibbsdemo/
 # 
-########################################################
-
+###########################################################################################
 
 
 import numpy as np
-from scipy.stats import gamma
 import matplotlib.pyplot as plt
+from scipy.stats import gamma
 
-def inversegamma(N, a):
-    """
-    inversegamma(N, a)
-    creates a sample from 1/s^N * exp( - a/(s^2) )
-    """
-    beta = dgamma(0.5 * (N-3.0), a)
-    sigma = np.sqrt(1.0 / beta)
-    return sigma
 
-def dgamma(N, a):
-    """
-    dgamma(N, a)
-    creates a sample from b^N exp( - a b )
-    """
-    beta = sgamma(N)
-    b = beta / a
-    return b
+def inverse_gamma_sample(N, a):
+    beta = gamma_sample_scaled(0.5 * (N - 3.0), a)
+    return np.sqrt(1.0 / beta)
 
-def sgamma(a):
-    """
-    sgamma(a) ~ sample from b^a * exp(-b), i.e., Gamma(a+1, 1)
-    """
+
+def gamma_sample_scaled(N, a):
+    return gamma_sample(N) / a
+
+
+def gamma_sample(a):
     return gamma.rvs(a + 1, scale=1)
 
-def gibbs(mu, sigma, L, xbar, v, N, 
-          wl, wlt, wltlog, ltt, verbose, T, logtime, zz, doplot):
-    sN = np.sqrt(N)
 
-    wl[logtime, :] = [mu, sigma, -0.5, T]
-    logtime += 1
+def compute_posterior(mu, sigma, xbar, v, N, exponent):
+    D = N * ((mu - xbar) ** 2 + v) / (2 * sigma ** 2)
+    S = sigma ** exponent
+    return np.exp(-D) / S
 
-    if wltlog:
-        wlt[ltt, :] = [mu, sigma, -0.5, ltt]
-        ltt += 1
 
-    for l in range(L):
-        if doplot:
-            import matplotlib.pyplot as plt
-            plt.clf()
-            if zz is not None and len(zz) >= 3:
-                x, y, z = zz[0], zz[1], zz[2]
-                plt.contour(x, y, z, 20)
+def plot_contour(wlt, wl, zz):
+    plt.clf()
+    if zz is not None and len(zz) >= 3:
+        x, y, z = zz
+        plt.contour(x, y, z, 20)
+    if wlt is not None:
+        plt.plot(wlt[:, 0], wlt[:, 1], 'b.-', label='Trajectory')
+    if wl is not None:
+        plt.plot(wl[:, 0], wl[:, 1], 'ro', label='Logged Weights')
+    plt.xlabel('mu')
+    plt.ylabel('sigma')
+    plt.legend()
+    plt.show(block=False)
 
-            if wlt is not None:
-                plt.plot(wlt[:, 0], wlt[:, 1], 'b.-', label='Trajectory')
-            if wl is not None:
-                plt.plot(wl[:, 0], wl[:, 1], 'ro', label='Logged Weights')
 
-            plt.xlabel('mu')
-            plt.ylabel('sigma')
-            plt.legend()
-            plt.show(block=False)
-            ans = input("ready? (0 to skip plotting): ")
-            if ans == '0':
-                doplot = False
+def step_plot(state, mu, sigma):
+    if state['doplot']:
+        plot_contour(state['wlt'], state['wl'], state['zz'])
+        ans = input("ready? (0 to skip plotting): ")
+        if ans == '0':
+            state['doplot'] = False
 
-        # Step 1: sample mu from Gaussian
-        mu = xbar + np.random.randn() * sigma / sN
 
-        if wltlog:
-            wlt[ltt, :] = [mu, sigma, -0.5, ltt]
-            ltt += 1
+def gibbs_sampler(state):
+    sN = np.sqrt(state['N'])
+    mu, sigma = state['mu'], state['sigma']
 
-        if doplot:
-            plt.clf()
-            if zz is not None and len(zz) >= 3:
-                x, y, z = zz[0], zz[1], zz[2]
-                plt.contour(x, y, z, 20)
-            if wlt is not None:
-                plt.plot(wlt[:, 0], wlt[:, 1], 'b.-', label='Trajectory')
-            if wl is not None:
-                plt.plot(wl[:, 0], wl[:, 1], 'ro', label='Logged Weights')
-            plt.xlabel('mu')
-            plt.ylabel('sigma')
-            plt.legend()
-            plt.show(block=False)
-            ans = input("ready? (0 to skip plotting): ")
-            if ans == '0':
-                doplot = False
+    for _ in range(state['L']):
+        step_plot(state, mu, sigma)
 
-        # Step 2: sample sigma from inverse gamma
-        sigma = inversegamma(N + 1, 0.5 * N * ((mu - xbar)**2 + v))
+        mu = state['xbar'] + np.random.randn() * sigma / sN
+        if state['wltlog']:
+            state['wlt'][state['ltt'], :] = [mu, sigma, -0.5, state['ltt']]
+            state['ltt'] += 1
 
-        if wltlog:
-            wlt[ltt, :] = [mu, sigma, -0.5, ltt]
-            ltt += 1
+        step_plot(state, mu, sigma)
 
-        # Log weight
-        T += 1
-        wl[logtime, :] = [mu, sigma, -0.5, T]
-        logtime += 1
+        sigma = inverse_gamma_sample(state['N'] + 1, 0.5 * state['N'] * ((mu - state['xbar']) ** 2 + state['v']))
 
-        if verbose:
+        if state['wltlog']:
+            state['wlt'][state['ltt'], :] = [mu, sigma, -0.5, state['ltt']]
+            state['ltt'] += 1
+
+        state['T'] += 1
+        state['wl'][state['logtime'], :] = [mu, sigma, -0.5, state['T']]
+        state['logtime'] += 1
+
+        if state['verbose']:
             print(f"[mu, sigma] = [{mu}, {sigma}]")
 
-    return mu, sigma, logtime, ltt
+    return mu, sigma
 
 
 def demo_skye():
-    # --- "Global" loggers and settings ---
-    dT = 1
-    T = 0
-    dT0 = 1
-    T0 = 0
-    logtime = 0   # Python, zero-based
-    wl = []   # weight vector log
-    wlt = []  # trajectory log
-    wltlog = True  # enable trajectory logging
-    ltt = 0
+    # Configuration and logging
+    state = {
+        'mu': 0.1,
+        'sigma': 1.0,
+        'xbar': 1.0,
+        'v': 0.2,
+        'N': 5,
+        'L': 30,
+        'T': 0,
+        'logtime': 0,
+        'ltt': 0,
+        'wl': np.full((70, 4), np.nan),    # weight vector log
+        'wlt': np.full((100, 4), np.nan),  # trajectory log
+        'wltlog': True,
+        'verbose': False,
+        'doplot': True,
+        'zz': None
+    }
 
-    autos = False
-    verbose = False
-    logsy = True   # log y-axis for sigma
-    arrows = False
-
-    doplot = True
-
-    # --- Initial conditions and data ---
-    mu = 0.1
-    sigma = 1.0
-    xbar = 1.0
-    v = 0.2
-    N = 5
-    L = 30
-
-    # --- Define plotting range ---
+    # Posterior surface setup
     xmin, xmax, dx = 0, 2.0, 0.05
     smin, smax, dls = 0.18, 1.8, 0.1
-
     x = np.arange(xmin, xmax + dx, dx)
     ls = np.arange(np.log(smin), np.log(smax) + dls, dls)
     s = np.exp(ls)
-
     X, S = np.meshgrid(x, s)
+    D = np.outer(np.ones(len(s)), state['N'] * ((x - state['xbar']) ** 2 + state['v'])) / (2 * np.outer(s ** 2, np.ones(len(x))))
+    exponent = state['N']
+    Z = np.exp(-D) / np.outer(s ** exponent, np.ones(len(x)))
 
-    D = np.outer(np.ones(len(s)), N * ((x - xbar) ** 2 + v)) / (2 * np.outer(s ** 2, np.ones(len(x))))
-
-    if logsy:
-        exponent = N
-    else:
-        exponent = N + 1
-
-    SO = np.outer(s ** exponent, np.ones(len(x)))
-    Z = np.exp(-D) / SO
-
-    # --- Plotting surface ---
     fig = plt.figure(1)
     plt.clf()
     ax = fig.add_subplot(111, projection='3d')
@@ -176,12 +133,8 @@ def demo_skye():
     plt.grid(True)
     plt.show(block=False)
 
-    # Save meshgrid for plotting trajectories later
-    zz = (X, S, Z)
-
     input("Ready for contour plot? ")
 
-    # --- Plotting contour ---
     plt.figure(2)
     plt.clf()
     plt.contour(X, S, Z, 10)
@@ -191,32 +144,13 @@ def demo_skye():
     plt.tight_layout()
     plt.show(block=False)
 
-    # --- Set random seed ---
-    see = 0.1123456
-    np.random.seed(int(see * 10**7))  # best effort, as Octave's "rand('seed', x)" isn't directly compatible
+    state['zz'] = (X, S, Z)
+    np.random.seed(1123456)
 
-    # --- Optional: arrows to indicate sigma_N and sigma_{N-1} ---
-    if arrows:
-        h1 = np.sqrt(v)
-        h2 = np.sqrt(v * N / (N - 1))
-        plt.plot([1, 2], [h1, h1], 'r--', label=r'$\sigma_N$')
-        plt.plot([1, 2], [h2, h2], 'g--', label=r'$\sigma_{N-1}$')
-        plt.legend()
-        plt.show(block=False)
+    # Gibbs sampling
+    mu, sigma = gibbs_sampler(state)
 
-    # --- Initialize sample logging arrays ---
-    # wl = np.zeros((L * 2 + 10, 4))
-    # wlt = np.zeros((L * 3 + 10, 4))
-    wl = np.full((L * 2 + 10, 4), np.nan)
-    wlt = np.full((L * 3 + 10, 4), np.nan)
-
-
-    # --- Call Gibbs sampler ---
-    # The gibbs function should be updated to not return mu,sigma but to update wl, wlt and globals by reference (or could return them)
-    mu, sigma, logtime, ltt  = gibbs(mu, sigma, L, xbar, v, N, 
-                      wl, wlt, wltlog, ltt, verbose, T, logtime, zz, doplot)
-
-    # --- Final plot of trajectory and samples ---
+    # Final plot
     fig = plt.figure(3)
     plt.clf()
     ax = fig.add_subplot(111, projection='3d')
@@ -227,41 +161,21 @@ def demo_skye():
     ax.set_title('Gibbs Samples on Posterior')
     ax.view_init(30, 60)
 
-    wl = wl[~np.isnan(wl[:, 0])]
-    wlt = wlt[~np.isnan(wlt[:, 0])]
+    wl = state['wl'][~np.isnan(state['wl'][:, 0])]
+    wlt = state['wlt'][~np.isnan(state['wlt'][:, 0])]
+    exponent = state['N']
 
-    print("wlt shape", wlt.shape)
-    print("wl shape", wl.shape)
-    print("wl",wl)
-    if wlt.shape[0] > 0 and np.any(wlt):
-        ax.plot3D(wlt[:ltt, 0], wlt[:ltt, 1], wlt[:ltt, 2], 'ro', label="Trajectory")
+    z_samples = compute_posterior(wl[:, 0], wl[:, 1], state['xbar'], state['v'], state['N'], exponent)
+    ax.plot3D(wl[:, 0], wl[:, 1], z_samples, 'gx', label="Samples")
 
-    # if wl.shape[0] > 0 and np.any(wl):
-    #     ax.plot3D(wl[:logtime, 0], wl[:logtime, 1], wl[:logtime, 2], 'gx', label="Samples")
-    # Project wl samples onto Z surface
-    mu_samples = wl[:logtime, 0]
-    sigma_samples = wl[:logtime, 1]
-
-    print("mu_samples:", mu_samples)
-    print("sigma_samples:", sigma_samples)
-
-    # Evaluate posterior (Z) at the sample points
-    def posterior(mu, sigma):
-        D = N * ((mu - xbar)**2 + v) / (2 * sigma**2)
-        S = sigma ** exponent
-        return np.exp(-D) / S
-
-    z_samples = posterior(mu_samples, sigma_samples)
-    print("z_samples", z_samples[:10])
-
-
-    # Plot the samples at their actual posterior value
-    ax.plot3D(mu_samples, sigma_samples, z_samples, 'gx', label="Samples")  # accepted samples
-    #ax.plot3D(mu_samples, sigma_samples, z_samples,  'gx', label="Samples", markersize=6, zorder=10)
+    if wlt.shape[0] > 0:
+        ax.plot3D(wlt[:state['ltt'], 0], wlt[:state['ltt'], 1], wlt[:state['ltt'], 2], 'ro', label="Trajectory")
 
     ax.legend()
     plt.grid(True)
     plt.show()
 
+
 if __name__ == "__main__":
     demo_skye()
+

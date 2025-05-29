@@ -41,6 +41,6 @@ for i in itertools.count(1):
     plt.xlabel("Position")
     plt.ylabel("Visits")
     plt.pause(0.1)  # seconds
-    
-    s = f" at t={i * period} ".center(23,'-')
+
+    s = f" at t={i * period} ".center(23, "-")
     input(s)

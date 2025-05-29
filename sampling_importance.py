@@ -64,7 +64,9 @@ class ImportancePlotter:
 
         self.axs[1].plot(y[:, 0], y[:, 1], "b-", label="P*(x)")
         self.axs[1].plot(xphi[:, 0], xphi[:, 1], "m-", label="φ(x)")
-        self.axs[1].plot(np.array(xQs)[:, 0], np.array(xQs)[:, 1], "g.", alpha=0.5, label="Samples")
+        self.axs[1].plot(
+            np.array(xQs)[:, 0], np.array(xQs)[:, 1], "g.", alpha=0.5, label="Samples"
+        )
         if sampling_method == 2 and xQ is not None:
             self.axs[1].plot(xQ[:, 0], xQ[:, 1], color="purple", label="Q*(x)")
         self.axs[1].legend()
@@ -82,9 +84,7 @@ class ImportancePlotter:
         plt.show()
 
 
-def importance_sampling(
-    pause, sampling_method, xmin, xmax, mu, sigma, R, pstar_fn
-):
+def importance_sampling(pause, sampling_method, xmin, xmax, mu, sigma, R, pstar_fn):
     spacing = 0.01
     high = 1.0
     x, y, xphi = setup_reference_distributions(pstar_fn, spacing)
@@ -131,7 +131,9 @@ def importance_sampling(
         r += 1
 
         xQs.append([x_sample, phi_val])
-        ws.append([r, ((r / R) * grange) + gxmin, w, wphi, sumwphi / sumw, sumwphi, sumw])
+        ws.append(
+            [r, ((r / R) * grange) + gxmin, w, wphi, sumwphi / sumw, sumwphi, sumw]
+        )
 
         if pause and (r < 5 or (r < 60 and r % 10 == 0) or r % 20 == 0):
             plotter.update(sampling_method, y, xphi, xQ, xQs, np.array(ws), R)
@@ -155,12 +157,24 @@ def importance_sampling(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="MacKay-style Importance Sampling Demo")
-    parser.add_argument("--steps", type=int, default=50, help="Number of sampling steps")
-    parser.add_argument("--sigma", type=float, default=1.0, help="Gaussian proposal stddev")
-    parser.add_argument("--method", type=int, default=1, help="Sampling method: 1=Uniform, 2=Gaussian")
-    parser.add_argument("--fast", action="store_true", help="Run without pause (faster)")
-    parser.add_argument("--pstar2", action="store_true", help="Use second target distribution")
+    parser = argparse.ArgumentParser(
+        description="MacKay-style Importance Sampling Demo"
+    )
+    parser.add_argument(
+        "--steps", type=int, default=50, help="Number of sampling steps"
+    )
+    parser.add_argument(
+        "--sigma", type=float, default=1.0, help="Gaussian proposal stddev"
+    )
+    parser.add_argument(
+        "--method", type=int, default=1, help="Sampling method: 1=Uniform, 2=Gaussian"
+    )
+    parser.add_argument(
+        "--fast", action="store_true", help="Run without pause (faster)"
+    )
+    parser.add_argument(
+        "--pstar2", action="store_true", help="Use second target distribution"
+    )
 
     args = parser.parse_args()
     pstar_fn = pstar2 if args.pstar2 else pstar1

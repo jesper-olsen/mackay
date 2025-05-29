@@ -35,7 +35,9 @@ for t in itertools.count():
     plt.ylim(0, 1)
     plt.grid(True)
     plt.legend()
-    plt.ylim(bottom=0, top=max(np.max(dist) for dist in distributions) * 1.1)  # dynamic scaling
+    plt.ylim(
+        bottom=0, top=max(np.max(dist) for dist in distributions) * 1.1
+    )  # dynamic scaling
     plt.pause(0.01)  # needed for plot to update
     input("Press Enter for next step...")
 

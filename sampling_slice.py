@@ -5,7 +5,7 @@
 #
 #   * Chapter 29 in "Information Theory, Inference, and Learning Algorithms", David MacKay
 #     https://www.inference.org.uk/itprnn/book.html
-#   * Lecture Video 13 
+#   * Lecture Video 13
 #     https://www.inference.org.uk/itprnn_lectures/13_mackay.mp4
 #   * Old octave demo:
 #     https://www.inference.org.uk/mackay/itprnn/code/mcmc/
@@ -15,9 +15,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
-
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 def slplota(xQs, y, xt, pt, u, r, pausing):
@@ -122,6 +119,7 @@ def slplotc(
 
     if pausing:
         input("Press Enter to continue...")
+
 
 def phi(x):
     return 0.2 * (x + 5.0)

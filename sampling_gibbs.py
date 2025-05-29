@@ -15,6 +15,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 from scipy.stats import gamma
 
 
@@ -93,6 +94,14 @@ def gibbs_sampler(state):
 
 
 def demo_skye():
+    parser = argparse.ArgumentParser(description="MacKay-style Gibbs Sampling Demo")
+    parser.add_argument("--seed", type=int, default=1123456, help="Random seed")
+    args = parser.parse_args()
+
+    if args.seed is not None:
+        np.random.seed(args.seed)
+
+
     # Configuration and logging
     state = {
         "mu": 0.1,
@@ -149,7 +158,6 @@ def demo_skye():
     plt.show(block=False)
 
     state["zz"] = (X, S, Z)
-    np.random.seed(1123456)
 
     # Gibbs sampling
     mu, sigma = gibbs_sampler(state)

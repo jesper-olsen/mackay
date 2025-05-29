@@ -260,11 +260,17 @@ if __name__ == "__main__":
     parser.add_argument("--fast", action="store_true", help="No pause between steps")
     parser.add_argument("--logscale", action="store_true", help="Use logscale")
     parser.add_argument("--pstar2", action="store_true", help="density pstar2")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed")
     args = parser.parse_args()
+
+    if args.seed is not None:
+        np.random.seed(args.seed)
+
     pstar = pstar2 if args.pstar2 else pstar1
     logscale = False
     print(f"Slice sampling ({args.steps})")
-    slice(
+
+    xQs = slice(
         not args.fast,
         xmin=-15,
         xmax=15,
@@ -275,3 +281,8 @@ if __name__ == "__main__":
         logscale=args.logscale,
         pstar=pstar,
     )
+
+    estimated_phi = np.mean(xQs[:, 1])  # column 1 is phi(x)
+    print("Done")
+    print(f"Estimated <φ>: {estimated_phi:.6f}")
+

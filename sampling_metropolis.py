@@ -106,8 +106,6 @@ def metplota(r, xt, pt, xprop, pprop, xQ, y, xQs, pausing):
 
 
 def metropolis(pausing, xmin, xmax, mu, sigma, R, pstar):
-    np.random.seed(42)
-
     defheight = -0.25
     inc = 0.05
     high = 2.0
@@ -168,7 +166,13 @@ def metropolis(pausing, xmin, xmax, mu, sigma, R, pstar):
         metplota(R, xt, pt, xprop, pprop, xQ, y, xQs, False)
 
     print("Done")
-    plt.pause(-1)
+
+    acceptance_rate = a / R
+    average_phi = sumphi / R
+    print(f"Acceptance rate: {acceptance_rate:.3f}")
+    print(f"Estimated <φ>: {average_phi:.6f}")
+    plt.show()
+
     return xQs
 
 
@@ -189,7 +193,13 @@ if __name__ == "__main__":
     )
     parser.add_argument("--fast", action="store_true", help="No pause between steps")
     parser.add_argument("--pstar2", action="store_true", help="density pstar2")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed")
+
     args = parser.parse_args()
+
+    if args.seed is not None:
+        np.random.seed(args.seed)
+
     pstar = pstar2 if args.pstar2 else pstar1
     # density(pstar)
     # distribution(pstar)

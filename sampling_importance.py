@@ -1,3 +1,17 @@
+############################################################################################
+#  Markov Chain Monte Carlo - Importance Sampling
+#
+#  References
+#
+#   * Chapter 29 in "Information Theory, Inference, and Learning Algorithms", David MacKay
+#     https://www.inference.org.uk/itprnn/book.html
+#   * Lecture Video 12 (start)
+#     https://www.inference.org.uk/itprnn_lectures/09_mackay.mp4
+#   * Old octave demo:
+#     https://www.inference.org.uk/mackay/itprnn/code/mcmc/
+#
+############################################################################################
+
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse

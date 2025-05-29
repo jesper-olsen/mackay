@@ -1,25 +1,27 @@
 ############################################################################################
-#  Markov Chain Monte Carlo - Metropolis Method 
-# 
+#  Markov Chain Monte Carlo - Metropolis Method
+#
 #  References
-# 
+#
 #   * Chapter 29 in "Information Theory, Inference, and Learning Algorithms", David MacKay
 #     https://www.inference.org.uk/itprnn/book.html
 #   * Lecture Video 12 @ 53:50 (Metropolis)
 #     https://www.inference.org.uk/itprnn_lectures/09_mackay.mp4
 #   * Old octave demo:
 #     https://www.inference.org.uk/mackay/itprnn/code/mcmc/
-# 
+#
 ############################################################################################
 
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 
+
 def phi(x):
     # phi is a function whose mean we want
-    return 0.2 * (x+5.0)
-    #return np.exp(-x**2 / 2) / np.sqrt(2 * np.pi) # Standard normal density
+    return 0.2 * (x + 5.0)
+    # return np.exp(-x**2 / 2) / np.sqrt(2 * np.pi) # Standard normal density
+
 
 def density(pstar):
     # Generate data
@@ -30,28 +32,30 @@ def density(pstar):
 
     # Figure 1: P*(x) and φ(x)
     plt.figure()
-    plt.plot(y[:, 0], y[:, 1], 'b-', label='P*(x)')
-    plt.plot(xphi[:, 0], xphi[:, 1], 'r-', label='φ(x)')
-    plt.title('P*(x) and φ(x)')
-    plt.xlabel('x')
-    plt.ylabel('Value')
+    plt.plot(y[:, 0], y[:, 1], "b-", label="P*(x)")
+    plt.plot(xphi[:, 0], xphi[:, 1], "r-", label="φ(x)")
+    plt.title("P*(x) and φ(x)")
+    plt.xlabel("x")
+    plt.ylabel("Value")
     plt.legend()
     plt.grid(True)
     plt.show()
+
 
 def distribution(pstar):
     x = np.arange(-5, 5.2, 0.2)  # Include endpoint as in Octave
     y = pstar(x)
     plt.figure()
-    plt.plot(x, y, 'o-', label='P*(x)')  # 'o-' for point + line (mimics impulses)
-    plt.xlabel('x')
-    plt.ylabel('P*(x)')
-    plt.title('Distribution P*(x)')
+    plt.plot(x, y, "o-", label="P*(x)")  # 'o-' for point + line (mimics impulses)
+    plt.xlabel("x")
+    plt.ylabel("P*(x)")
+    plt.title("Distribution P*(x)")
     plt.xlim([-5, 5])
     plt.ylim([0, 3.1])
     plt.legend()
     plt.grid(True)
     plt.show()
+
 
 def Qnorm(x, mu, sigma, h):
     """
@@ -67,7 +71,8 @@ def Qnorm(x, mu, sigma, h):
         ndarray: density values at x
     """
     x = np.asarray(x)
-    return h * np.exp(-((x - mu) ** 2) / (2 * sigma ** 2))
+    return h * np.exp(-((x - mu) ** 2) / (2 * sigma**2))
+
 
 def metplota(r, xt, pt, xprop, pprop, xQ, y, xQs, pausing):
     plt.ion()
@@ -79,9 +84,9 @@ def metplota(r, xt, pt, xprop, pprop, xQ, y, xQs, pausing):
 
     plt.plot(y[:, 0], y[:, 1], "b-", label="P*(x)")
     plt.plot(xQ[:, 0], xQ[:, 1], "g-", label="Q*(x'; x_t)")
-    plt.axvline(xt, color='k', linestyle='--', label="xt")
+    plt.axvline(xt, color="k", linestyle="--", label="xt")
     plt.plot(xt, pt, "ro", label="xt, pt")
-    plt.axvline(xprop, color='m', linestyle='--', label="xprop")
+    plt.axvline(xprop, color="m", linestyle="--", label="xprop")
     plt.plot([xt, xprop], [pt, pprop], "co-", label="Current to Proposal")
 
     if r >= 2:
@@ -167,23 +172,34 @@ def metropolis(pausing, xmin, xmax, mu, sigma, R, pstar):
     return xQs
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
+
     def pstar1(x):
-        return np.exp(0.4 * ((x - 0.4)**2) - 0.08 * (x**4))
+        return np.exp(0.4 * ((x - 0.4) ** 2) - 0.08 * (x**4))
+
     def pstar2(x):
-        return np.exp(1.15 * np.sin(6.0 * x) - 0.3 * ((x - 0.65)**2) - 0.01 * (x**4))
+        return np.exp(1.15 * np.sin(6.0 * x) - 0.3 * ((x - 0.65) ** 2) - 0.01 * (x**4))
 
     parser = argparse.ArgumentParser(description="Metropolis MCMC demo")
-    parser.add_argument("--steps", type=int, default=100, help="Number of sampling steps")
-    parser.add_argument("--sigma", type=float, default=1.5, help="Proposal distribution stddev")
+    parser.add_argument(
+        "--steps", type=int, default=100, help="Number of sampling steps"
+    )
+    parser.add_argument(
+        "--sigma", type=float, default=1.5, help="Proposal distribution stddev"
+    )
     parser.add_argument("--fast", action="store_true", help="No pause between steps")
     parser.add_argument("--pstar2", action="store_true", help="density pstar2")
     args = parser.parse_args()
     pstar = pstar2 if args.pstar2 else pstar1
-    #density(pstar)
-    #distribution(pstar)
+    # density(pstar)
+    # distribution(pstar)
 
-    metropolis(pausing=not args.fast, xmin=-15, xmax=15, mu=0.0, sigma=args.sigma, R=args.steps, pstar=pstar)
-
-
-
+    metropolis(
+        pausing=not args.fast,
+        xmin=-15,
+        xmax=15,
+        mu=0.0,
+        sigma=args.sigma,
+        R=args.steps,
+        pstar=pstar,
+    )

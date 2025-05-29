@@ -1,4 +1,4 @@
-Mackay
+MacKay
 ==============
 
 Python implementation of some of the Markov Chain Monte Carlo demos David Mackay gives in his Information Theory course [1][2].

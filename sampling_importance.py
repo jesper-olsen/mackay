@@ -58,11 +58,48 @@ def impplot0(style, xQ=None, xQs=None, ws=None):
     plt.tight_layout()
     plt.show()
 
+# def impplot(style, xQ, xQs, ws, R):
+#     fig, axs = plt.subplots(2, 1, figsize=(12, 8), gridspec_kw={'height_ratios': [1, 2]})
+
+#     # Top subplot: estimate of <phi>
+#     axs[0].set_title(f"{R} samples")
+#     axs[0].plot(ws[:, 0], ws[:, 4], color='steelblue', label="estimate of <phi>")
+#     axs[0].set_ylabel("<phi>")
+#     axs[0].set_xlim([0, R])
+#     axs[0].legend()
+#     axs[0].grid(True)
+
+#     # Bottom subplot: distributions
+#     axs[1].plot(y[:, 0], y[:, 1], 'b-', label="P*(x)")
+#     axs[1].plot(xphi[:, 0], xphi[:, 1], 'm-', label="phi(x)")
+#     axs[1].plot(xQs[:, 0], xQs[:, 1], 'g.', alpha=0.5, label="Samples")
+#     if style == 2 and xQ is not None:
+#         axs[1].plot(xQ[:, 0], xQ[:, 1], color='purple', label="Q*(x)")
+#     axs[1].legend()
+#     axs[1].set_xlabel("x")
+#     axs[1].set_ylabel("Value")
+#     axs[1].set_title("Distribution functions")
+#     axs[1].grid(True)
+
+#     plt.tight_layout()
+#     plt.show()
+
+# Setup persistent figure and axes
+fig = None
+axs = None
+
 def impplot(style, xQ, xQs, ws, R):
-    fig, axs = plt.subplots(2, 1, figsize=(12, 8), gridspec_kw={'height_ratios': [1, 2]})
+    global fig, axs
+
+    if fig is None:
+        plt.ion()  # Turn on interactive mode
+        fig, axs = plt.subplots(2, 1, figsize=(12, 8), gridspec_kw={'height_ratios': [1, 2]})
+    else:
+        for ax in axs:
+            ax.clear()
 
     # Top subplot: estimate of <phi>
-    axs[0].set_title(f"{R} samples")
+    axs[0].set_title(f"{int(ws[-1, 0])} samples")
     axs[0].plot(ws[:, 0], ws[:, 4], color='steelblue', label="estimate of <phi>")
     axs[0].set_ylabel("<phi>")
     axs[0].set_xlim([0, R])
@@ -72,7 +109,7 @@ def impplot(style, xQ, xQs, ws, R):
     # Bottom subplot: distributions
     axs[1].plot(y[:, 0], y[:, 1], 'b-', label="P*(x)")
     axs[1].plot(xphi[:, 0], xphi[:, 1], 'm-', label="phi(x)")
-    axs[1].plot(xQs[:, 0], xQs[:, 1], 'g.', alpha=0.5, label="Samples")
+    axs[1].plot(np.array(xQs)[:, 0], np.array(xQs)[:, 1], 'g.', alpha=0.5, label="Samples")
     if style == 2 and xQ is not None:
         axs[1].plot(xQ[:, 0], xQ[:, 1], color='purple', label="Q*(x)")
     axs[1].legend()
@@ -82,7 +119,10 @@ def impplot(style, xQ, xQs, ws, R):
     axs[1].grid(True)
 
     plt.tight_layout()
-    plt.show()
+    plt.draw()
+    plt.pause(0.01)
+
+    input("Press Return to continue...")
 
 # === Importance Sampling Main Function ===
 def importance(style, xmin, xmax, mu, sigma, R, plotting):

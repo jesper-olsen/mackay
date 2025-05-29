@@ -95,7 +95,7 @@ def gibbs_sampler(state):
 
 def demo_skye():
     parser = argparse.ArgumentParser(description="MacKay-style Gibbs Sampling Demo")
-    parser.add_argument("--seed", type=int, default=1123456, help="Random seed")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed")
     args = parser.parse_args()
 
     if args.seed is not None:

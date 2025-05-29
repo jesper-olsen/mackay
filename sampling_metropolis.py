@@ -16,6 +16,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 
+def pstar1(x):
+    return np.exp(0.4 * ((x - 0.4) ** 2) - 0.08 * (x**4))
+
+def pstar2(x):
+    return np.exp(1.15 * np.sin(6.0 * x) - 0.3 * ((x - 0.65) ** 2) - 0.01 * (x**4))
+
 
 def phi(x):
     # phi is a function whose mean we want
@@ -177,13 +183,6 @@ def metropolis(pausing, xmin, xmax, mu, sigma, R, pstar):
 
 
 if __name__ == "__main__":
-
-    def pstar1(x):
-        return np.exp(0.4 * ((x - 0.4) ** 2) - 0.08 * (x**4))
-
-    def pstar2(x):
-        return np.exp(1.15 * np.sin(6.0 * x) - 0.3 * ((x - 0.65) ** 2) - 0.01 * (x**4))
-
     parser = argparse.ArgumentParser(description="Metropolis MCMC demo")
     parser.add_argument(
         "--steps", type=int, default=100, help="Number of sampling steps"

@@ -104,21 +104,19 @@ def importance_sampling(pause, sampling_method, xmin, xmax, mu, sigma, R, pstar_
     plotter = ImportancePlotter() if pause else None
     xQs = []
     ws = []
-    sumwphi = sumw = r = 0
+    sumwphi = sumw = 0
 
-    while r < R:
+    for r in range(R):
         x_sample = sample_fn()
         if sampling_method == 1 and not (xmin <= x_sample <= xmax):
             continue
 
-        q = q_fn(np.array([x_sample])).item()
-
+        q = q_fn(np.array([x_sample])).item() # python scalar
         w = pstar_fn(x_sample) / q
         phi_val = phi(x_sample)
         wphi = w * phi_val
         sumwphi += wphi
         sumw += w
-        r += 1
 
         xQs.append([x_sample, phi_val])
         estimate = sumwphi / sumw

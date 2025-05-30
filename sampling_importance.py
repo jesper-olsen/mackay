@@ -111,7 +111,8 @@ def importance_sampling(pause, sampling_method, xmin, xmax, mu, sigma, R, pstar_
         if sampling_method == 1 and not (xmin <= x_sample <= xmax):
             continue
 
-        q = float(q_fn(np.array([x_sample])))
+        q = q_fn(np.array([x_sample])).item()
+
         w = pstar_fn(x_sample) / q
         phi_val = phi(x_sample)
         wphi = w * phi_val

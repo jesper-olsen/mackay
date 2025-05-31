@@ -1,5 +1,5 @@
 ############################################################################################
-#  Markov Chain Monte Carlo - Importance Sampling
+#  Monte Carlo Methods - Importance Sampling
 #
 #  References
 #

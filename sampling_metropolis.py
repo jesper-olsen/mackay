@@ -108,7 +108,7 @@ def metplota(r, xt, pt, xprop, pprop, xQ, y, xQs, pausing):
     plt.pause(0.001)
 
     if pausing:
-        input("Press Enter to continue...")
+        input(f"Step {r} - Press Enter to continue...")
 
 
 def metropolis(pausing, xmin, xmax, mu, sigma, R, pstar):

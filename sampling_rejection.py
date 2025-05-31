@@ -1,5 +1,5 @@
 ############################################################################################
-#  Markov Chain Monte Carlo - Rejection Sampling
+#  Monte Carlo Methods - Rejection Sampling
 #
 #  References
 #

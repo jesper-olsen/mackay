@@ -1,80 +1,25 @@
-MacKay
-==============
+## MacKay
 
-Python implementation of some of the Markov Chain Monte Carlo demos David Mackay gives in his Information Theory course [1][2].
-The original demos can be seen in the lecture videos and sofware (octave/gnuplot/perl) for some of them survives on his website, but are hard to run with modern versions of those tools.
+Reimplemntation of some of the demos David MacKay gives in his Information Theory course [1][2].
+The original demos are in Tcl/octave/gnuplot/perl/python - some of them survive on his website [3].
+The Tcl demos generally still work as do the few perl & python demos (non graphical).
+The octave/gnuplot demos, however, do not work with modern versions of octave and gnuplot.
+Also - the demos exist in different version tailord for different environments, e.g. labeled
+Lewis and Skye, which probably were different servers in the engineering department.
 
 References
 ----------
 
-[1] [Lecture 12 from David MacKay's Information Theory course](https://videolectures.net/videos/mackay_course_12)
+[1] [Lecture 13 from David MacKay's Information Theory course](https://videolectures.net/videos/)
 
 [2] Chapter 29, [Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
 
+[3] (MacKay's original perl/gnuplot implementation)[https://www.inference.org.uk/mackay/itprnn/code/metrop/]
 
+DEMOS
+-----
 
-Run
----
-
-Random walk in a corridor of width 20 - draw histogram of positions visited.
-```
-% uv venv
-% uv run metropolis_demo.py
-% uv pip install matplotlib numpy
-% uv run metropolis_demo.py
-Pausing every 20 iterations - press enter to continue
-|           *         |
-|            *        |
-|             *       |
-|            *        |
-|             *       |
-|              *      |
-|               *     |
-|              *      |
-|               *     |
-|                *    |
-|                 *   |
-|                *    |
-|                 *   |
-|                  *  |
-|                   * |
-|                    *| Bonk!
-|                    *| Bonk!
-|                    *| Bonk!
-|                   * |
-|                  *  |
-------- at t=20 -------
-|                   * |
-|                  *  |
-|                 *   |
-|                *    |
-|                 *   |
-|                  *  |
-|                   * |
-|                    *| Bonk!
-|                    *| Bonk!
-|                   * |
-|                  *  |
-|                 *   |
-|                  *  |
-|                 *   |
-|                  *  |
-|                 *   |
-|                  *  |
-|                 *   |
-|                  *  |
-|                   * |
-------- at t=40 -------
-```
-![PNG](https://raw.githubusercontent.com/jesper-olsen/mackay/main/Assets/Figure_1.png)
-
-Position 10 and position 17 occupied initially.
-Display probability of being in each position at time step t.
-```
-% uv run metropolis_demo_prob.py
-Press Enter for next step...
-Press Enter for next step...
-Press Enter for next step...
-Press Enter for next step...
-```
-![PNG](https://raw.githubusercontent.com/jesper-olsen/mackay/main/Assets/Figure_2.png)
+-- (Metropolis Simulation (Bonk))[READMEbonk.md]
+-- (Importance Sampling)[]
+-- (Rejection Sampling)[]
+-- (Slice Sampling)[]

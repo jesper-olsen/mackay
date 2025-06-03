@@ -19,7 +19,7 @@ References
 DEMOS
 -----
 
-* (Metropolis Simulation (Bonk))[READMEbonk.md]
+* (Metropolis Simulation)[READMEbonk.md]
 * (Importance Sampling)[]
 * (Rejection Sampling)[]
 * (Slice Sampling)[]

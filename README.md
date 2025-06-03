@@ -28,7 +28,7 @@ The demos are in python3 and make use of numpy, scipy and matplotlib, e.g. insta
 
 * Chapter 21/Lecture 9: [Infer Gaussian](READMEinferG.md)
 * Chapter 29/Lecture 13: [Metropolis Simulation (Bonk!)](READMEbonk.md)
-* Chapter 29/Lecture 12: [MC Importance Sampling]()
+* Chapter 29/Lecture 12: [MC Importance Sampling](READMEimportance_sampling.md)
 * Chapter 29/Lecture 12: [MC Rejection Sampling]()
 * Chapter 29/Lecture 12: [MCMC Metropolis Sampling]()
 * Chapter 29/Lecture 12: [MCMC Slice Sampling]()

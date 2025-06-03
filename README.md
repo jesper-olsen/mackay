@@ -19,7 +19,10 @@ References
 DEMOS
 -----
 
-* [Metropolis Simulation (Bonk!)](READMEbonk.md)
-* [Importance Sampling]()
-* [Rejection Sampling]()
-* [Slice Sampling]()
+* Chapter 21/Lecture 9: [Infer Gaussian]()
+* Chapter 29/Lecture 13: [Metropolis Simulation (Bonk!)](READMEbonk.md)
+* Chapter 29/Lecture 12: [MC Importance Sampling]()
+* Chapter 29/Lecture 12: [MC Rejection Sampling]()
+* Chapter 29/Lecture 12: [MCMC Metropolis Sampling]()
+* Chapter 29/Lecture 12: [MCMC Slice Sampling]()
+* Chapter29/Lecture 12: [MCMC Gibbs Sampling]()

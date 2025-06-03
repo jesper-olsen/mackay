@@ -6,7 +6,7 @@ References
 
 [1] [Lecture 12 (start) from David MacKay's Information Theory course](https://videolectures.net/videos/mackay_course_9)
 
-[2] Chapter 29, [Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
+[2] [Chapter 29, Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
 
 [3] [MacKay's original octave implementation](https://www.inference.org.uk/mackay/itprnn/code/mcmc/)
 

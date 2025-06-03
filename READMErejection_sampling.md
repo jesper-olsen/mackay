@@ -6,7 +6,7 @@ References
 
 [1] [Lecture 12 from David MacKay's Information Theory course](https://videolectures.net/videos/mackay_course_12)
 
-[2] Chapter 29, [Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
+[2] [Chapter 29, Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
 
 [3] [MacKay's original octave implementation](https://www.inference.org.uk/mackay/itprnn/code/mcmc/)
 
@@ -31,7 +31,7 @@ Press Enter to continue...
 Press Enter to continue...
 Press Enter to continue...
 See estimate plot...
-Final estimate of <φ>: -0.1000
+Final estimate of <φ>: 0.9748
 Accepted: 39 / 50 (78.00%)
 ```
 

@@ -167,7 +167,7 @@ if __name__ == "__main__":
     )
 
     if accepted.shape[0] > 0:
-        final_estimate = accepted[-1, 6]
+        final_estimate = accepted[-1, 5]
         print(f"\nFinal estimate of <φ>: {final_estimate:.4f}")
         print(f"Accepted: {a} / {args.steps} ({a / args.steps:.2%})")
     else:

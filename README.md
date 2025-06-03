@@ -26,7 +26,7 @@ The demos are in python3 and make use of numpy, scipy and matplotlib, e.g. insta
 % uv pip install matplotlib numpy
 ```
 
-* Chapter 21/Lecture 9: [Infer Gaussian](InferG.md)
+* Chapter 21/Lecture 9: [Infer Gaussian](READMEinferG.md)
 * Chapter 29/Lecture 13: [Metropolis Simulation (Bonk!)](READMEbonk.md)
 * Chapter 29/Lecture 12: [MC Importance Sampling]()
 * Chapter 29/Lecture 12: [MC Rejection Sampling]()

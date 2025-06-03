@@ -2,7 +2,7 @@
 
 Reimplemntation of some of the demos David MacKay gives in his Information Theory course [1][2].
 The original demos are in Tcl/octave/gnuplot/perl/python - some of them survive on his website [3].
-The Tcl demos generally still work as do the few perl & python demos (non graphical).
+The Tcl demos generally still work as do the few perl4 & python2 demos (non graphical).
 The octave/gnuplot demos, however, do not work with modern versions of octave and gnuplot.
 Also - the demos exist in different versions tailord for different environments, e.g. labeled
 Lewis and Skye, which probably were different servers in the engineering department.

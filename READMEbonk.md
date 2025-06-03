@@ -26,7 +26,7 @@ References
 
 [2] Chapter 29, [Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
 
-[3] (MacKay's original perl/gnuplot implementation)[https://www.inference.org.uk/mackay/itprnn/code/metrop/]
+[3] [MacKay's original perl/gnuplot implementation](https://www.inference.org.uk/mackay/itprnn/code/metrop/)
 
 
 Run

@@ -19,6 +19,13 @@ References
 DEMOS
 -----
 
+The demos are in python3 and make use of numpy, scipy and matplotlib, e.g. install locally with the [uv](https://github.com/astral-sh/uv) package manager:
+
+```
+% uv venv
+% uv pip install matplotlib numpy
+```
+
 * Chapter 21/Lecture 9: [Infer Gaussian]()
 * Chapter 29/Lecture 13: [Metropolis Simulation (Bonk!)](READMEbonk.md)
 * Chapter 29/Lecture 12: [MC Importance Sampling]()

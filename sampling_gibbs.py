@@ -56,7 +56,7 @@ def plot_contour(wlt, wl, zz):
 def step_plot(state, mu, sigma):
     if state["doplot"]:
         plot_contour(state["wlt"], state["wl"], state["zz"])
-        ans = input("ready? (0 to skip plotting): ")
+        ans = input(f"{state['T']}: ready? (0 to skip plotting): ")
         if ans == "0":
             state["doplot"] = False
 

@@ -14,12 +14,12 @@ References
 
 [2] [Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
 
-[3] [MacKay's original perl/gnuplot implementation](https://www.inference.org.uk/mackay/itprnn/code/)
+[3] [MacKay's original demo code](https://www.inference.org.uk/mackay/itprnn/code/)
 
 DEMOS
 -----
 
-The demos are in python3 and make use of numpy, scipy and matplotlib, e.g. install locally with the [uv](https://github.com/astral-sh/uv) package manager:
+The demos are in python3 and make use of numpy, scipy and matplotlib, e.g. install locally with the [uv](https://github.com/astral-sh/uv) package manager before running the individual demos:
 
 ```
 % uv venv

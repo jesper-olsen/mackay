@@ -10,7 +10,7 @@ Lewis and Skye, which probably were different servers in the engineering departm
 References
 ----------
 
-[1] [Video Lectures - MacKay's Information Theory course](https://videolectures.net/videos/)
+[1] [Video Lectures - MacKay's Information Theory course](https://www.inference.org.uk/itprnn_lectures/)
 
 [2] [Information Theory, Inference, and Learning Algorithms, David J.C. MacKay](https://www.inference.org.uk/mackay/Book.html)
 

@@ -31,5 +31,5 @@ The demos are in python3 and make use of numpy, scipy and matplotlib, e.g. insta
 * Chapter 29/Lecture 12: [MC Rejection Sampling](READMErejection_sampling.md)
 * Chapter 29/Lecture 12: [MCMC Metropolis Sampling](READMEmetropolis_sampling.md)
 * Chapter 29/Lecture 13: [Metropolis Simulation (Bonk!)](READMEbonk.md)
-* Chapter29/Lecture 12: [MCMC Gibbs Sampling](READMEgibbs_sampling.md)
+* Chapter 29/Lecture 12: [MCMC Gibbs Sampling](READMEgibbs_sampling.md)
 * Chapter 29/Lecture 13: [MCMC Slice Sampling](READMEslice_sampling.md)
